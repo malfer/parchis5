@@ -1,0 +1,136 @@
+Instrucciones del juego
+
+La pantalla
+
+    La pantalla está dividida en dos zonas. A la izquierda
+    el tablero de juego. A la derecha tienes (de arriba a
+    abajo) la tecla del menú principal, las barras de
+    progreso de cada color, el dado rodeado de un
+    rectángulo cuyo color indica el jugador que tiene el
+    turno, un área de texto con indicaciones y dos botones
+    cuyo uso cambia según el estado del juego.
+
+Comenzar una partida
+
+    Cuando Parchís v5 arranca aparece la pantalla de Nueva
+    partida, salvo que tuvieras guardada una partida a
+    medias. Si ya estás jugando y quieres comenzar una
+    partida nueva pulsa Menú y luego sobre la opción Nueva
+    partida.
+
+    En la pantalla de Nueva partida puedes elegir entre
+    partida individual o por parejas, para cada color
+    selecciona si lo manejará un humano o un robot o si no
+    juega. Tienes cinco niveles de robot para elegir:
+
+    Nivel 0, que juega al azar.
+    Nivel 1, prefiere ir a los seguros y comer si puede,
+             pero tiene un gran componente de azar.
+    Nivel 2, como el nivel 1, pero no perdona si puede
+             comer.
+    Nivel 3, que tiene en cuenta las fichas que puede comer
+             y que le pueden comer.
+    Nivel 4, que valora además otras situaciones, como si
+             tiene fichas en casa, si puede contar cuando
+             come o entra en meta, etcétera.
+
+    Cuando comienzes la partida verás un pequeño muñeco en
+    cada esquina que indica si es humano o robot. Para los
+    robots un cinturón de karate indicará su nivel. Blanco
+    para nivel 0, amarillo para nivel 1, naranja para nivel
+    2, verde para nivel 3 y azúl para nivel 4.
+
+    El botón "Opciones" permite elegir varias opciones para
+    la partida:
+
+     - Quién empieza, permite elegir el color que comienza
+       la partida, por defecto es el amarillo.
+     - Final rápido, terminará la partida si sólo queda un
+       jugador por llegar a meta.
+     - Final rápido de robots, terminará la partida si
+       todos los humanos han llegado y sólo quedan robots
+       por entrar a meta.
+     - Final súbito, terminará la partida en cuanto llegue
+       el primer jugador a meta.
+     - Dado manual, te permite usar tu propio dado en lugar
+       del automático. Cuando esta opción está activa, el
+       programa te pedirá el valor del dado cada vez que le
+       toque tirar a un jugador, sea máquina o humano. 
+       Puedes usar el dado manual si no te fias del dado
+       automático (pero te aseguro que Parchís v5 no hace
+       trampas) o para juegar contra otro programa.
+
+Jugar con Parchis v5
+
+    Siempre comienza el jugador Amarillo (salvo que lo
+    hayas cambiado), pero si no juega entonces comenzará el
+    primer color que juegue desde el Amarillo avanzando en
+    sentido contrario a las agujas del reloj.
+
+    Cuando el turno sea de una persona, sigue las
+    indicaciones que aparecen bajo el dado y utiliza uno de
+    los botones bajo el texto para realizar la acción
+    necesaria, ya sea lanzar el dado, pasar, elegir ficha o
+    mover. La ficha seleccionada para mover aparecerá
+    marcada con una cruz grande y con una cruz pequeña las
+    fichas que se pueden seleccionar. Siempre que se pueda
+    mover más de una ficha, la ficha con cruz grande irá
+    cambiando al pulsar el botón de elegir ficha ó al
+    pulsar una ficha con cruz pequeña con el ratón. Para
+    mover, puedes pulsar el botón de mover ó arrastrar la
+    ficha hacia su destino, que aparecerá señalado con
+    varias flechas multicolor.
+
+    En juego por parejas si tienes a tiro una ficha de tu
+    compañero puedes elegir entre comerla o hacer barrera,
+    comprueba la marca que indica donde se moverá la ficha
+    para distinguir entre estas jugadas, pulsa varias veces
+    el botón de elegir ficha o sobre la ficha elegida para
+    que veas la diferencia.
+
+    Si le toca jugar a la máquina, no tienes que hacer
+    nada, el texto bajo el dado te irá indicando lo que
+    está haciendo. Durante el turno de la máquina puedes
+    poner el juego en pausa tocando el botón etiquetado
+    como Pausa, para continuar toca el etiquetado como
+    Continuar.
+
+    Puedes girar el tablero con el ratón en cualquier
+    momento para colocar los colores como más te guste.
+
+Velocidad
+
+    En el Menú principal encontrarás la opción Velocidad.
+    Con ella podrás elegir la velocidad a la que se
+    realizarán las jugadas: lenta, normal, rápida ó muy
+    rápida.
+
+Ajustes globales
+
+    También en el Menú principal encontrarás la opción
+    Ajustes globales. Te llevará a una pantalla donde
+    podrás elegir:
+
+    - Dimensiones gráficas, que permite cambiar el tamaño
+      de la pantalla.
+    - Idioma, puedes elegir entre Inglés o Español.
+    - Imagen del tablero, para elegir entre varios diseños
+      de tablero, pruébalos y quedate con el más te guste.
+
+    Las elecciones que hagas se conservarán aunque salgas
+    del programa.
+
+Estadísticas de la partida
+
+    En el Menú principal encontrarás la opción Estadísticas
+    de la partida. Muestra una ventana con las estadísitcas
+    hasta ese momento, porcentaje de dados obtenido y
+    lances especiales del juego.
+
+Estadísticas globales
+
+    También en el Menú principal está la opción
+    Estadísiticas globales. Muestra una lista del número de
+    partidas jugadas por tipo de juego, combinación de
+    jugadores y tipo de dado utilizado. Para cada jugador
+    aparecerán los porcentajes de victoria.

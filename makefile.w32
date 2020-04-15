@@ -1,0 +1,47 @@
+.PHONY : clean
+
+CC = gcc
+
+CCOPT = -O1 -Wall
+
+OBJS = dlgnewgm.o \
+       dlgmstat.o \
+       dlgglbst.o \
+       dlgsettg.o \
+       dlghelp.o  \
+       gloadimg.o \
+       gposgdef.o \
+       gpaint.o   \
+       gcarrera.o \
+       ganimat.o  \
+       edefpart.o \
+       eposfich.o \
+       epospart.o \
+       etablero.o \
+       ejugada.o  \
+       egrpjg.o   \
+       eanlglb.o  \
+       epartida.o \
+       histpart.o \
+       lg_eng.o   \
+       lg_esp.o   \
+       ctxrsz.o   \
+       ctxrot.o
+
+OBJS += random.o
+
+all: parchis5.exe
+
+parchis5.exe: parchis5.o gparchis.h engine.h i18n.h $(OBJS)
+	$(CC) $(LDOPT) -o $@ parchis5.o $(OBJS) -lmgrx -lpng -lz -lm -mwindows
+
+parchis5.o: gparchis.h engine.h i18n.h
+
+$(OBJS): %.o : %.c gparchis.h engine.h i18n.h
+
+.c.o:
+	$(CC) -c $(CCOPT) $(INCDIR) $*.c
+
+clean:
+	if exist *.o del *.o
+	if exist parchis5.exe del parchis5.exe

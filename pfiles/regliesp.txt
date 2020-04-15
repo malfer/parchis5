@@ -1,0 +1,129 @@
+El parchís
+
+El Parchís es un juego de mesa derivado del Pachisi. Es muy
+popular en España. Se juega con 1 dado y 4 fichas para cada
+uno de los jugadores (de uno a cuatro). El objeto del juego
+es que cada jugador lleve sus fichas desde la salida hasta
+la meta, intentando en el camino comerse a las demás. El
+primero en conseguirlo será el ganador.
+
+En las siguientes secciones se describen las normas que
+entiende Parchis4A. El texto está basado en la entrada
+Parchís de la Wikipedia.
+
+Terminología
+
+    Las casillas cuadradas grandes coloreadas de las
+      esquinas se denominan casas.
+    Las casillas rectangulares, coloreadas y numeradas que
+      hay junto a cada casa se denominan salidas.
+    Las casillas rectangulares grises o marcadas de otro
+      color se denominan seguros.
+    Las casillas triangulares coloreadas del centro del
+      tablero se denominan metas.
+    A las casillas coloreadas justo antes de las metas se
+      les suele llamar pasillo.
+    Dos fichas de igual color en la misma casilla forman
+      una barrera o puente y se dice que la barrera se
+      “abre” cuando una de esas fichas es movida.
+    Contar siete, diez o veinte significa que un jugador
+      debe avanzar una de sus fichas siete, diez o veinte
+      casillas, respectivamente.
+    Se emplean las palabras comer o capturar cuando una
+      ficha ocupa la posición de una ficha contraria y ésta
+      última se mueve a su casa.
+
+Reglas básicas
+
+    Al comenzar el juego todas las fichas están en la casa
+      de su color.
+    La partida se desarrolla por turnos. Cada jugador
+      lanzará el dado una sola vez en cada turno. Una vez
+      jugado su turno, si sacó un 6, el jugador repetirá el
+      turno (ver más abajo). En caso contrario cederá el
+      turno al siguiente jugador en sentido contrario a las
+      agujas del reloj.
+    Sólo cuando la puntuación obtenida con el dado no
+      permita hacer ninguna jugada el jugador no hará nada.
+      En el resto de los casos el jugador está obligado a
+      hacer lo que pueda hacer.
+    Las fichas se mueven en sentido contrario a las agujas
+      del reloj desde la salida de su color hasta la meta
+      de su color. Las fichas que están en la casa y en la
+      meta no se pueden mover.
+    Una ficha no puede ser movida hasta una casilla en la
+      que ya existan 2 fichas, salvo el caso especial al
+      salir de casa. Sólo la casa y la meta pueden contener
+      3 o 4 fichas.
+
+Sobre el 5
+
+    El jugador que saca un 5 con el dado debe sacar ficha
+      de su casa a la casilla de salida. Si esto no fuera
+      posible porque ya tiene dos fichas en la salida o
+      porque ya no dispone de más fichas para sacar, deberá
+      mover 5 casillas con cualquier ficha.
+    Al sacar el primer 5, se ponen 2 fichas en la salida.
+
+Sobre el 1, el 2, el 3 y el 4
+
+    El jugador que saque un 1, un 2, un 3 ó un 4 avanzará
+      una de sus fichas una, dos, tres o cuatro casillas,
+      respectivamente.
+
+Sobre el 6
+
+    El jugador que saque un 6 avanzará una de sus fichas
+      seis casillas si tiene fichas en su casa. En el caso
+      de que no tenga fichas en casa se contará 7.
+    El jugador que saque un 6 podrá repetir turno. Si saca
+      otro 6 podrá volver a repetir. Si saca un tercer 6,
+      la última ficha que movió irá a casa. Sólo si la
+      última ficha movida ya llegó al pasillo o si no pudo
+      mover con el segundo seis, no irá a casa, pero no
+      podrá utilizar la tirada y terminará su turno.
+
+Sobre los puentes o barreras
+
+    Ninguna ficha puede pasar sobre una barrera. Esta regla
+      prevalece sobre las demás.
+    Si un jugador tiene una barrera y saca un 6 deberá
+      abrir la barrera. La única excepción a esta regla
+      ocurrirá cuando la ficha de la barrera deba avanzar
+      y ésta no pueda, ya sea por encontrarse con otra
+      barrera en medio del trayecto o por caer en una
+      casilla ocupada por otras dos fichas.
+
+Sobre comer o capturar
+
+    Si una ficha cae en una casilla blanca y numerada
+      ocupada por una ficha de otro color se la comerá. La
+      ficha comida irá a su casa original (de su mismo
+      color). El jugador que coma contará veinte.
+    En las salidas y en los seguros no es posible comer y
+      pueden estar dos fichas de colores diferentes.
+    En la salidas no puede haber más de dos fichas y si un
+      jugador al sacar una de sus fichas de su casa
+      encuentra fichas de otros colores comerá la última
+      que haya llegado y contará 20 (en el caso especial
+      de sacar dos fichas por obtener el primer 5, si hay 2
+      fichas ajenas en la casilla de salida, se irán ambas
+      a sus respectivas casas y el jugador que saca contará
+      20 con sólo una de las fichas
+
+Sobre la meta y el fin del juego
+
+    Una ficha entra a la meta con un número exacto de
+      casillas obtenido con el dado o porque se cuente 10 ó
+      20. Si el número no es exacto no puede entrar.
+    El jugador que mete una ficha en la meta cuenta 10 con
+      alguna de sus otras fichas.
+    El jugador que consigue meter sus 4 fichas en la meta
+      finaliza el juego, deja de lanzar el dado y pasa
+      turno.
+    Gana el jugador que primero mete sus 4 fichas en su
+      meta. En segundo lugar y tercer lugar quedan los
+      jugadores que consiguen meter todas sus fichas en
+      segundo y tercer lugar, respectivamente. Pierde el
+      jugador que no consigue meter todas las fichas cuando
+      los otros han terminado.

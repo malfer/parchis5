@@ -1,0 +1,22 @@
+Parchís por parejas
+
+En el parchís por parejas, los compañeros se sitúan en
+extremos opuestos del tablero, con lo que una pareja
+utilizará el azul y el verde y la otra el rojo y el
+amarillo.
+
+Las reglas son las mismas que en el parchís individual con
+las siguientes diferencias:
+
+    Dos fichas de la misma pareja en una casilla forman
+      puente aunque sean de distinto color.
+    Cuando un jugador tiene a tiro una ficha de su
+      compañero puede optar por comerla y contar 20 o por
+      formar puente.
+    Al sacar ficha de casa, si hay una ficha del equipo
+      contrario y otra de su compañero comerá la del equipo
+      contrario incluso si llegó antes que la ficha del
+      compañero.
+
+Gana la pareja del primer jugador que consigue meter todas
+sus fichas en meta.

@@ -1,0 +1,119 @@
+The parchís
+
+The parchis is a board game derived from Pachisi. It is
+very popular in Spain.
+
+This game is played with 1 die and 4 pawns per player (up
+to four). As in Pachisi, the aim is simple: players compete
+on leading their four pawns out of their home, around the
+whole board, into the color track and up to the center of
+the board, chasing and "eating" each other in the process.
+
+Here we present the rules that Parchís4A uses, they are
+based on the Wikipedia spanish article.
+
+Terminology
+
+    The large square colored boxes in the corners are
+      called "home".
+    The rectangular squares, colored and numbered next to
+      each home are called "start".
+    The gray rectangular squares are called "safe".
+    The triangular colored boxes in the center of the board
+      are called "goal".
+    Colored squares just before the goal are often called
+      "corridor".
+    Two pawns of the same color on the same square form a
+      "blockade" and we say the barrier is open when one of
+      those pawns is moved.
+    To count seven, ten or twenty means that a player must
+      move one pawn seven, ten or twenty squares,
+      respectively.
+    We use the word "eat" when a pawn occupies the position
+      of an opponent's pawn and the latter is moved to its
+      home.
+
+Basic rules
+
+    At the game beginning all the pawns are in the home of
+      their color.
+    The game is played in turns. Each player will roll the
+      dice once each turn. Once played his turn, if he
+      rolled a 6, the player will repeat the turn (see
+      below). Otherwise he pass the turn to the next player
+      counter-clockwise.
+    Only when the given score does not allow any move the
+      player does nothing. In all other cases, the player
+      is required to do what I can do.
+    The pawns move in a counter-clockwise from the start of
+      its color to goal of its color. The pawns that are in
+      home or in goal can not be moved.
+    A pawn can not be moved to a square that already exist
+      2 pawns, except for the special case when leaving
+      home. Only home and goal may contain 3 or 4 pawns.
+
+About the 5
+
+    The player who gets a 5 on the die must pick a pawn
+      from home to the start square. If this is not
+      possible because he has two pawns at the start or
+      because he no longer has to draw more pawns, he must
+      move 5 squares with any pawn.
+    By taking the first 5, 2 pawns are placed in the start.
+
+About 1, 2, 3 and 4
+
+    When the player rolls a 1, a 2, 3 or 4 he will advance
+      one pawn one, two, three or four squares,
+      respectively.
+
+About the 6
+
+    The player who rolls 6 advance one pawn six squares if
+      he has pawns at home. If he has no pawns at home will
+      count 7.
+    The player who rolls 6 will repeat turn. If he rolls
+      another 6 he will repeat again, but if he rolls a
+      third six, the last pawn moved will go home. Only if
+      the last moved pawn is in the corridor or if the
+      player didn't move the second six, no pawn will go
+      home, but he can not use the run and end his turn.
+
+About blockades
+
+    No pawn can pass over a blockade. This rule overrides
+      any other.
+    If a player has a blockade and rolls a 6 will open the
+      barrier. The only exception to this rule occur when
+      the barrier pawns can't advance, either because there
+      is another blockade in the middle of the way or
+      because they fall into a square occupied by another
+      two pawns.
+
+About eating
+
+    If a pawn lands on a white square occupied by a pawn of
+      another color will eat. The opponent's pawn will go
+      to his color home. The player who eat will count 20.
+    In the start and safe squares it is forbidden to eat
+      and can be two different colored pawns.
+    In the start can not be more than two pawns. If a
+      player get a pawn from home and there are two
+      opponent's pawns in the start, he will eat the last
+      arrived pawn and will count 20. If it is the first 5
+      for the player he will eat the two opponent's pawns
+      but he will count 20 only once.
+
+About the goal and game end
+
+    A pawn enters the goal with a precise number obtained
+      with the dice or because they count 10 or 20. If it
+      isn't the exact number it can not enter.
+    The player who puts a pawn in goal will count 10 with
+      any of its other pawns.
+    The player who manages to get all 4 pawns on the goal
+      ends the game, stop throwing the dice and pass the
+      turn.
+    The player who first gets all 4 pawns on his goal win
+      the game. The lost player is the one with pawns out of
+      goal when all other players have finished.

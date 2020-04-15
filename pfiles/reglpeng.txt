@@ -1,0 +1,19 @@
+Parchís pairs rules
+
+In pairs game mates are on opposite sides, so one pair are
+yellow and red and another pair are green and blue.
+
+Play rules are the same as in single game, except for the
+next differences:
+
+    Two pawns from a same pair in the same square form a
+      blockade.
+    When you have a mate pawn at the square destination,
+      you can choose to eat it and advance 20 squares or to
+      do a blockade.
+    If you roll a 5 and there are a mate pawn and a
+      opponent pawn in the start square, you eat the
+      opponent pawn, even if this pawn was there first.
+
+The pair of the first player that have his four pawns in
+goal wins the game.

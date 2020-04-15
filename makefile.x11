@@ -1,0 +1,47 @@
+.PHONY : clean
+
+CC = gcc
+
+CCOPT = -O1 -Wall
+
+#CCOPT += -m32
+CCOPT += -m64
+
+OBJS = dlgnewgm.o \
+       dlgmstat.o \
+       dlgglbst.o \
+       dlgsettg.o \
+       dlghelp.o  \
+       gloadimg.o \
+       gposgdef.o \
+       gpaint.o   \
+       gcarrera.o \
+       ganimat.o  \
+       edefpart.o \
+       eposfich.o \
+       epospart.o \
+       etablero.o \
+       ejugada.o  \
+       egrpjg.o   \
+       eanlglb.o  \
+       epartida.o \
+       histpart.o \
+       lg_eng.o   \
+       lg_esp.o   \
+       ctxrsz.o   \
+       ctxrot.o
+
+all: xparchis5
+
+xparchis5: parchis5.o gparchis.h engine.h i18n.h $(OBJS)
+	$(CC) $(CCOPT) $(LDOPT) -o $@ parchis5.o $(OBJS) -lmgrxX -lX11 -lpng -lz -lm
+
+parchis5.o: gparchis.h engine.h i18n.h
+
+$(OBJS): %.o : %.c gparchis.h engine.h i18n.h
+
+.c.o:
+	$(CC) -c $(CCOPT) -D__XWIN__ $(INCDIR) $*.c
+
+clean:
+	rm -f *.o xparchis5

@@ -1,0 +1,9 @@
+# Ignore objects and archives.
+*.[oa]
+.directory
+# Ignore executable
+parchis5
+xparchis5
+# Ignore data files
+parchis.cfg
+parchis.hpt

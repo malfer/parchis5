@@ -1,0 +1,128 @@
+Game instructions
+
+The screen
+
+    The screen is divided into two zones. On the left the
+    game board. On the right you have (from top to down)
+    the main menu key, the progress bars of each color, the
+    die surrounded by a rectangle whose color indicates the
+    player who has the turn, a text area with directions
+    and two buttons whose use changes according to the
+    state of the game.
+
+Start a game
+
+    When Parchis v5 starts it shows the New game screen
+    (except if a game was previously saved). If you are in
+    the middle of a game and you want to start a new one
+    press Menu and touch the New game option.
+
+    On the New Game screen you can choose between single or
+    pairs game, for each color select whether it will be
+    handled by a human or a robot or no play. You have five
+    robot levels to choose from:
+
+    Level 0, which plays randomly.
+    Level 1, prefers to go to secures and eat if it can,
+             but it has a great component of chance.
+    Level 2, like level 1, but doesn't forgive if it can
+             eat any pawn.
+    Level 3, which takes into account the pawns it can eat
+             and those you can eat it.
+    Level 4, which also values other situations, as if it
+             has pawns at home, if it can count when eating
+             or entering goal, etc.
+
+    When you start the game you will see a little dummy in
+    each corner indicating whether it is human or robot.
+    For the robots a karate belt will indicate its level.
+    White for level 0, yellow for level 1, orange for level
+    2, green for level 3 and blue for level 4.
+
+    The "Options" button allows you to choose various
+    options for the game:
+
+     - Who begins, lets you choose the color that starts
+       the game, by default is yellow.
+     - Fast Ending, the game will end if there is only one
+       player left.
+     - Fast robot ending, the game will end if all humans
+       have finisheed and only robots players left.
+     - Super Fast Ending, the game will end as soon as a
+       player arrives to goal.
+     - Manual die, allows you to use your own die instead
+       of the automatic one. When this option is active,
+       the program will ask you for the value of the dice
+       every time a player turn begins, be it machine or
+       human. You can use the manual die if you don't trust
+       the automatic die (but I assure you that Parchís v5
+       does not cheat) or to play against another program.
+
+Play with Parchís v5
+
+    The Yellow player always starts (unless you have
+    changed it), but if he doesn't play then begins the
+    first color from Yellow advancing counterclockwise.
+
+    When it is a person's turn, follow the indications that
+    appear under the die and use one of the buttons under
+    the text to perform the necessary action, be it
+    throwing the dice, passing, choosing a pawn or move.
+    The selected pawn to move will appear marked with a
+    large cross and with a small cross the pawns that can
+    be selected. Whe it is possible to move more than one
+    pawn, the pawn with the large cross will be changing
+    by pressing the choose button or clicking a small cross
+    pawn with the mouse. To move, you can press the move
+    button or drag the pawn to his destination, which will
+    be marked with multi-colored arrows.
+
+    In pairs game if you can eat a mate pawn you have the
+    option to do a blockade instead. Pay atention to the
+    cros icon that indicate the pawn destination, press
+    several times the button to choose pawn or click on the
+    tab chosen pawn to see the difference.
+
+    If it's the machine turn, you don't have to do nothing,
+    the text under the dice will indicate what it is doing.
+    During the machine tuen you can pause the game by
+    clicking on the Pause button, to continue click the
+    Continue button.
+
+    You can rotate the board with the mouse at any time to
+    place the colors as you like.
+
+Game speed
+
+    In the Main Menu you will find the Game speed ​​option.
+    Here you can select how fast run automatic players:
+    slow, normal, fast or very fast.
+
+Settings
+
+    Also in the Main Menu you will find the option
+    Settings. It will take you to a screen where you can
+    choose:
+
+    - Graphic dimensions, which allows you to change the
+      screen size.
+    - Language, you can choose between English or Spanish.
+    - Board image, to choose between various boards
+      designs, try them and keep the one you like.
+
+    The choices you make will be preserved even if you
+    leave of the program.
+
+Game statistics
+
+    In the Main Menu you will find the Game statistics
+    option. It shows a window with the statistics up to the
+    moment, percentage of dice obtained and special moves.
+
+Global statistics
+
+    Also in the Main Menu there there is the Global
+    statistics option. It displays a list of the number of
+    played games by game type, combination of players and
+    type of dice used. For each player the victory
+    percentages will appear.
