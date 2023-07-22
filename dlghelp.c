@@ -148,6 +148,7 @@ static void HelpDlgDestroy(void)
     for (i=0; i<numlines; i++) {
         free(helptext[i]);
     }
+    numlines = 0;
 }
 
 int HelpDlgRun(int hfile)

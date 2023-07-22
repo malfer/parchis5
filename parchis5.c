@@ -68,6 +68,7 @@
 
 #define CFG_FILE "parchis.cfg"
 #define SAVE_FILE "parchis5.sav"
+#define RESTART_FILE "parchis5.res"
 #define HISTP_FILE "parchis.hpt"
 
 #define PI 3.14159265359
@@ -105,9 +106,10 @@ void set_speed(int speed);
 void check_testoptions(void);
 void clean_up(void);
 void settings_changed(GlobCfg *savedcfg);
+void window_resized(int width, int height);
 void paint_main_screen(void);
 void show_manual_dice(int show);
-int check_saved_game(int ask);
+int check_saved_game(char *fname, int ask, int onpause);
 int process_board_event(GrEvent *ev);
 void set_buttons_text(char *tb1, char *tb2);
 void set_instructions(void);
@@ -136,6 +138,8 @@ int main(int argc, char **argv)
     setup_i18n();
     HistPartInit(HISTP_FILE);
 
+    GrSetDriverExt(NULL, "rszwin"); // ask for window resize support
+
     mgrx_setup(argc, argv);
     grgui_setup();
     setup_globvar();
@@ -160,7 +164,7 @@ int main(int argc, char **argv)
         }
     }
 
-    if (!check_saved_game(1)) 
+    if (!check_saved_game(SAVE_FILE, 1, 0)) 
         GrEventParEnqueue(GREV_COMMAND, COMMAND_NEWGAME, 0, 0, 0);
 
     while(1) {
@@ -176,7 +180,7 @@ int main(int argc, char **argv)
                                             _(SGN_YES), _(SGN_NO), _(SGN_CANCEL));
                 desobscure();
                 if (ret == 1) PTSaveToFile(&globpt, SAVE_FILE);
-                if (ret == -1) continue;
+                if (ret < 0) continue;
             }
             break;
         }
@@ -283,6 +287,11 @@ int main(int argc, char **argv)
             continue;
         }
 
+        if (ev.type == GREV_WSZCHG) {
+            window_resized(ev.p3, ev.p4);
+            continue;
+        }
+
         GrSetContext(globvar.ctl);
         ev2 = ev;
         if ((ev.type == GREV_MOUSE) || (ev.type == GREV_MMOVE)) {
@@ -369,7 +378,7 @@ void mgrx_setup(int argc, char **argv)
 void grgui_setup(void)
 {
     GUIInit(1, 1);
-    GUIDBManageExposeEvents(1);
+    //GUIDBManageExposeEvents(1);
 
     //GUIObjectsSetChrType(GR_UTF8_TEXT); // this source is UTF8 coded
     GUIObjectsSetColors(WEBC_KHAKI, WEBC_PERU, WEBC_SIENNA);
@@ -681,7 +690,7 @@ void settings_changed(GlobCfg *savedcfg)
         savedcfg->gheight != globcfg.gheight ||
         (globcfg.gwidth > 1150 &&
          savedcfg->maxrsz != globcfg.maxrsz)) {
-        PTSaveToFile(&globpt, SAVE_FILE);
+        PTSaveToFile(&globpt, RESTART_FILE);
         clean_up();
         GUIEnd();
         GrSetMode(GR_default_text);
@@ -695,15 +704,16 @@ void settings_changed(GlobCfg *savedcfg)
         load_images();
         inicia_globgpos();
         setup_gparchis();
-        ini_globgstatus();
         GrSetContext(globctx);
-        paint_main_screen();
-        check_saved_game(0);
+        if (!check_saved_game(RESTART_FILE, 0, globgstatus.onpause)) {
+            ini_globgstatus();
+            paint_main_screen();
+        }
         return;
     }
 
     if (savedcfg->lang != globcfg.lang) {
-        PTSaveToFile(&globpt, SAVE_FILE);
+        PTSaveToFile(&globpt, RESTART_FILE);
         clean_up();
         GUIEnd();
         GrI18nSetLang(globcfg.lang);
@@ -715,10 +725,11 @@ void settings_changed(GlobCfg *savedcfg)
         load_images();
         inicia_globgpos();
         setup_gparchis();
-        ini_globgstatus();
         GrSetContext(globctx);
-        paint_main_screen();
-        check_saved_game(0);
+        if (!check_saved_game(RESTART_FILE, 0, globgstatus.onpause)) {
+            ini_globgstatus();
+            paint_main_screen();
+        }
         return;
     }
 
@@ -732,6 +743,32 @@ void settings_changed(GlobCfg *savedcfg)
     }
 }
     
+/***********************/
+
+void window_resized(int width, int height)
+{
+    globcfg.gwidth = width;
+    globcfg.gheight = height;
+    PTSaveToFile(&globpt, RESTART_FILE);
+    clean_up();
+    GUIEnd();
+    GrI18nSetLang(globcfg.lang);
+    mgrx_setup(0, NULL);
+    grgui_setup();
+    setup_globvar();
+    req_speed = globcfg.speed;
+    setup_menus();
+    setup_globgrp();
+    load_images();
+    inicia_globgpos();
+    setup_gparchis();
+    GrSetContext(globctx);
+    if (!check_saved_game(RESTART_FILE, 0, globgstatus.onpause)) {
+        ini_globgstatus();
+        paint_main_screen();
+    }
+}
+
 /***********************/
 
 void paint_main_screen(void)
@@ -804,7 +841,7 @@ void show_manual_dice(int show)
 
 /***********************/
 
-int check_saved_game(int ask)
+int check_saved_game(char *fname, int ask, int onpause)
 {
     static char *info[2];
 
@@ -812,7 +849,7 @@ int check_saved_game(int ask)
     int saved_exist = 0;
     int ret;
 
-    f = fopen(SAVE_FILE, "r");
+    f = fopen(fname, "r");
     if (f) {
         saved_exist = 1;
         fclose(f);
@@ -832,19 +869,22 @@ int check_saved_game(int ask)
     }
 
     if (ret == 1) {
-        if (PTLoadFromFile(&globpt, SAVE_FILE)) {
+        if (PTLoadFromFile(&globpt, fname)) {
             AnimationsStopAll();
             genera_munecos(&(globpt.pp.dp));
             ini_globgstatus();
+            if (onpause) globgstatus.onpause = onpause;
             paint_main_screen();
             if (globpt.status == PST_WAITPASSACK ||
                 globpt.status == PST_WAITJG)
                 paint_dice(globpt.vdice, playercolor[globpt.pp.turno]);
             calc_playable_pawn_positions();
+        } else {
+            ret = 0;
         }
     }
 
-    remove(SAVE_FILE);
+    remove(fname);
     
     return (ret == 1) ? 1 : 0;
 }
