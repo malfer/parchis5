@@ -98,6 +98,15 @@ Jugar con Parchis v5
     Puedes girar el tablero con el ratón en cualquier
     momento para colocar los colores como más te guste.
 
+Moviola
+
+    Cuando acaba una partida aparece el botón de moviola,
+    con el que puedes reproducir la partida desde el
+    principio. Puedes pausar y reanudar la moviola tocando
+    el botón de pausa. Se sale de la moviola cuando se
+    llega al final de la partida o en cualquier momento
+    pulsando el botón parar.
+
 Velocidad
 
     En el Menú principal encontrarás la opción Velocidad.

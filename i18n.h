@@ -1,7 +1,8 @@
 /*
  * i18n.h --- strings ids
  * 
- * Copyright (c) 2020 Mariano Alvarez Fernandez (malfer@telefonica.net)
+ * Copyright (c) 2020,2023 Mariano Alvarez Fernandez
+ * (malfer@telefonica.net)
  *
  * This file is part of Parchís5, a popular spanish game
  *
@@ -55,6 +56,7 @@ enum SID {
     SMT_LOADG,
     SMT_AUTOR,
     SMT_PANAL,
+    SMT_PMOVL,
 
     SMH_SRULES,              // help menu
     SMH_PRULES,              // help menu
@@ -84,7 +86,11 @@ enum SID {
     SMAIN_PAUSE,
     SMAIN_MDICE1,
     SMAIN_MDICE2,
+    SMAIN_REPLAY,
     SMAIN_REPGAME,
+    SMAIN_ONMOVL,
+    SMAIN_CONTMOVL,
+    SMAIN_STOPMOVL,
 
     SDEX_TITLE,              // exit dialog
     SDEX_MESSAGE,

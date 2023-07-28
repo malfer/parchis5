@@ -92,6 +92,14 @@ Play with Parchís v5
     You can rotate the board with the mouse at any time to
     place the colors as you like.
 
+Replay
+
+    When the game is over the replay button appears, you
+    can use it to review the game from the beginning. Tap
+    in the pause button to pause or continue the replay.
+    The replay mode exits when the end game is reached or
+    touching the stop button.
+
 Game speed
 
     In the Main Menu you will find the Game speed ​​option.

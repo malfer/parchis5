@@ -1,7 +1,8 @@
 /*
  * gparchis.h --- graphics related stuff include file
  * 
- * Copyright (c) 2020 Mariano Alvarez Fernandez (malfer@telefonica.net)
+ * Copyright (c) 2020,2023 Mariano Alvarez Fernandez
+ * (malfer@telefonica.net)
  *
  * This file is part of Parchís5, a popular spanish game
  *
@@ -31,6 +32,7 @@ typedef struct {
     int munecodim;        // muñeco dimension
     int podiumdim;        // single podium dimension
     int podiumpdim;       // pairs podium dimension
+    int movioladim;       // moviola dimension
     int xorg, yorg;       // x,y offset
     int xmenu, ymenu;     // menu position
     GrContext *tbl;       // board subcontext
@@ -58,7 +60,6 @@ typedef struct {
 } GlobCfg;
 
 typedef struct {
-    int onpause;          // 0=no, 1=yes
     int workingdice;      // 0=no, 1=yes, 2=just finsihed
     int robotpassing;     // 0=no, 1=yes, 2=just finsihed
     int robotpawnshow;    // 0=no, 1=yes, 2=just finsihed
@@ -82,8 +83,11 @@ extern GrColor cintcolor[5];
 
 extern GlobVars globvar;
 extern GlobCfg globcfg;
-extern Partida globpt;
 extern GStatus globgstatus;
+
+extern int globonpause;
+extern int globonmoviola;
+extern Partida globpt;
 
 void disaster(char *message);
 
@@ -103,6 +107,7 @@ extern GrContext *imgmuneco[4];
 extern GrContext *imgmunecobl[4];
 extern GrContext *imgpodium;
 extern GrContext *imgpodiump;
+extern GrContext *imgmoviola;
 
 void load_board(void);
 void load_images(void);
@@ -133,6 +138,8 @@ typedef struct {
     PosG podpos[4];
     PosG podiump;
     PosG podppos[4];
+    // others
+    PosG moviola;
 } GPositions;
 
 typedef struct {
@@ -158,6 +165,7 @@ void test_fichas(void);
 // in gpaint.c
 
 void paint_board(void);
+void paint_moviola(void);
 void paint_munecos(void);
 void paint_munecos2(void);
 void paint_fichas(void);

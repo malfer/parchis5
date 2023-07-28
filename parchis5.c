@@ -1,7 +1,8 @@
 /*
  * parchis5.c --- parchis5 main program
  * 
- * Copyright (c) 2020 Mariano Alvarez Fernandez (malfer@telefonica.net)
+ * Copyright (c) 2020,2023 Mariano Alvarez Fernandez
+ * (malfer@telefonica.net)
  *
  * This file is part of Parchís5, a popular spanish game
  *
@@ -58,6 +59,7 @@
 #define TEST_LOADGAME      205
 #define TEST_AUTOREPEAT    206
 #define TEST_PRINTANAL     207
+#define TEST_PRINTMOVL     208
 
 #define COMMAND_EXIT       500
 
@@ -81,8 +83,13 @@ GrColor cintcolor[5];
 
 GlobVars globvar;
 GlobCfg globcfg;
-Partida globpt;
 GStatus globgstatus;
+
+int globonpause = 0;
+int globonmoviola = 0;
+Partida globpt;
+Partida globptsaved;
+MovPartida globmovpt = {0, 0, 0, NULL};
 
 static int gwidth = 1150;
 static int gheight = 950;
@@ -109,19 +116,22 @@ void settings_changed(GlobCfg *savedcfg);
 void window_resized(int width, int height);
 void paint_main_screen(void);
 void show_manual_dice(int show);
-int check_saved_game(char *fname, int ask, int onpause);
+int check_saved_game(char *fname, int ask);
 int process_board_event(GrEvent *ev);
 void set_buttons_text(char *tb1, char *tb2);
 void set_instructions(void);
 void do_next_step(void);
 void play_partida_command(int command, int id);
 void play_partida_auto(void);
+void play_partida_moviola(void);
 void dlg_about(void);
 int get_diceval(void);
 void obscure(void);
 void desobscure(void);
 void load_globcfg(char *fname);
 void save_globcfg(char *fname);
+int save_game(char *fname);
+int load_game(char *fname);
 
 /***********************/
 
@@ -147,6 +157,8 @@ int main(int argc, char **argv)
     setup_globgrp();
     load_images();
     inicia_globgpos();
+    PTInit(&globpt, &(globcfg.defaultdp));
+    MPClear(&globmovpt);
     setup_gparchis();
     ini_globgstatus();
 
@@ -164,7 +176,7 @@ int main(int argc, char **argv)
         }
     }
 
-    if (!check_saved_game(SAVE_FILE, 1, 0)) 
+    if (!check_saved_game(SAVE_FILE, 1))
         GrEventParEnqueue(GREV_COMMAND, COMMAND_NEWGAME, 0, 0, 0);
 
     while(1) {
@@ -179,7 +191,7 @@ int main(int argc, char **argv)
                 ret = GUICDialogYesNoCancel(_(SDEX_TITLE), (void **)infoexit, 1,
                                             _(SGN_YES), _(SGN_NO), _(SGN_CANCEL));
                 desobscure();
-                if (ret == 1) PTSaveToFile(&globpt, SAVE_FILE);
+                if (ret == 1) save_game(SAVE_FILE);
                 if (ret < 0) continue;
             }
             break;
@@ -206,16 +218,22 @@ int main(int argc, char **argv)
                     NewGameDlgGetData(&(globcfg.defaultdp));
                     AnimationsStopAll();
                     PTInit(&globpt, &(globcfg.defaultdp));
+                    MPClear(&globmovpt);
                     genera_munecos(&(globcfg.defaultdp));
                     ini_globgstatus();
+                    globonmoviola = 0;
+                    globonpause = 0;
                     paint_main_screen();
                 }
             } else if (ev.p1 == COMMAND_REPEATGAME) {
                 AnimationsStopAll();
                 dpaux = globpt.pp.dp;
                 PTInit(&globpt, &dpaux);
+                MPClear(&globmovpt);
                 //genera_munecos(&dpaux);
                 ini_globgstatus();
+                globonmoviola = 0;
+                globonpause = 0;
                 paint_main_screen();
             } else if (ev.p1 == COMMAND_GAMESTATS) {
                 obscure();
@@ -263,9 +281,9 @@ int main(int argc, char **argv)
                 //StartRoTblAnimation(90, 1);
                 StartRoTblAnimation(30, 3);
             } else if (ev.p1 == TEST_SAVEGAME) {
-                PTSaveToFile(&globpt, SAVE_FILE);
+                save_game(SAVE_FILE);
             } else if (ev.p1 == TEST_LOADGAME) {
-                if (PTLoadFromFile(&globpt, SAVE_FILE)) {
+                if (load_game(SAVE_FILE)) {
                     AnimationsStopAll();
                     genera_munecos(&(globpt.pp.dp));
                     ini_globgstatus();
@@ -277,11 +295,11 @@ int main(int argc, char **argv)
             } else if (ev.p1 == TEST_PRINTANAL) {
                 globcfg.printanal = !globcfg.printanal;
                 GUIMenuSetTag(ID_TESTMENU, TEST_PRINTANAL, globcfg.printanal);
-            } else if (ev.p1 == COMMAND_A) {
-                play_partida_command(ev.p1, ev.p2);
-            } else if (ev.p1 == COMMAND_B) {
-                play_partida_command(ev.p1, ev.p2);
-            } else if (ev.p1 == COMMAND_MD) {
+            } else if (ev.p1 == TEST_PRINTMOVL) {
+                MPPrint(&globmovpt, stdout);
+            } else if (ev.p1 == COMMAND_A ||
+                       ev.p1 == COMMAND_B ||
+                       ev.p1 == COMMAND_MD) {
                 play_partida_command(ev.p1, ev.p2);
             }
             continue;
@@ -314,11 +332,15 @@ int main(int argc, char **argv)
 
         if (ev.type == GREV_NULL) {
             AnimationsRun(ev.time);
-            play_partida_auto();
+            if (globonmoviola)
+                play_partida_moviola();
+            else
+                play_partida_auto();
         }
     }
 
     clean_up();
+    MPClean(&globmovpt);
     GUIEnd();
     GrSetMode(GR_default_text);
 
@@ -370,7 +392,7 @@ void mgrx_setup(int argc, char **argv)
     TRANSPARENT = GrAllocColor(10, 10, 10) | GrIMAGE;
     //TRANSPARENT = GrAllocColor(250, 250, 250) | GrIMAGE;
     //GrSetFontPath("../pfiles/;./");
-    GrSetWindowTitle("Parchis v5");
+    GrSetWindowTitle("Parchis v5.1");
 }
 
 /***********************/
@@ -410,6 +432,7 @@ void setup_globvar(void)
 #define MUNECODIM 96   // this must be the muñeco image dim
 #define PODIUMDIM 268  // this must be the single podium image dim
 #define PODIUMPDIM 328 // this must be the pairs podium image dim
+#define MOVIOLADIM 107  // this must be moviola image dim
 
 #define DICEDIM 61               // this must be the DICE image dim
 #define DICEBOXH (DICEDIM + 80)  // Dice box height dimension
@@ -437,6 +460,7 @@ void setup_globvar(void)
     globvar.munecodim = round(MUNECODIM * globvar.scale);
     globvar.podiumdim = round(PODIUMDIM * globvar.scale);
     globvar.podiumpdim = round(PODIUMPDIM * globvar.scale);
+    globvar.movioladim = round(MOVIOLADIM * globvar.scale);
     globvar.xorg = (GrSizeX() - (globvar.tbldim + CTLDIMW + 4)) / 2;
     globvar.yorg = (GrSizeY() - globvar.tbldim) / 2;
     //printf("%d\n", globvar.tbldim);
@@ -509,15 +533,16 @@ void setup_menus(void)
         {GUI_MI_OPER, 1, "", 0, NULL, 0, COMMAND_SPEED5, 0, SMV_INSTANT}};
     static GUIMenu speedmenu = {ID_SPEEDMENU, 5, 1, itemsspeed, 1};
 
-    static GUIMenuItem itemstest[7] = {
+    static GUIMenuItem itemstest[8] = {
         {GUI_MI_OPER, 1, "", 0, NULL, 0, TEST_FICHAS, 0, SMT_TPAWN},
         {GUI_MI_OPER, 1, "", 0, NULL, 0, TEST_GIRAIZQ, 0, SMT_TLEFT},
         {GUI_MI_OPER, 1, "", 0, NULL, 0, TEST_GIRADER, 0, SMT_TRIGHT},
         {GUI_MI_OPER, 1, "", 0, NULL, 0, TEST_SAVEGAME, 0, SMT_SAVEG},
         {GUI_MI_OPER, 1, "", 0, NULL, 0, TEST_LOADGAME, 0, SMT_LOADG},
         {GUI_MI_OPER, 1, "", 0, NULL, 0, TEST_AUTOREPEAT, 0, SMT_AUTOR},
-        {GUI_MI_OPER, 1, "", 0, NULL, 0, TEST_PRINTANAL, 0, SMT_PANAL}};
-    static GUIMenu testmenu = {ID_TESTMENU, 7, 0, itemstest, 1};
+        {GUI_MI_OPER, 1, "", 0, NULL, 0, TEST_PRINTANAL, 0, SMT_PANAL},
+        {GUI_MI_OPER, 1, "", 0, NULL, 0, TEST_PRINTMOVL, 0, SMT_PMOVL}};
+    static GUIMenu testmenu = {ID_TESTMENU, 8, 0, itemstest, 1};
 
     static GUIMenuItem itemshelp[4] = {
         {GUI_MI_OPER, 1, "", 0, NULL, 0, COMMAND_HELPSRULES, 0, SMH_SRULES},
@@ -597,15 +622,15 @@ void setup_gparchis(void)
     cintcolor[3] = WEBC_LIMEGREEN;
     cintcolor[4] = WEBC_DODGERBLUE;
 
-    PTInit(&globpt, &(globcfg.defaultdp));
-    genera_munecos(&(globcfg.defaultdp));
+//    PTInit(&globpt, &(globcfg.defaultdp));
+//    MPClear(&globmovpt);
+    genera_munecos(&(globpt.pp.dp));
 }
 
 /***********************/
 
 void ini_globgstatus(void)
 {
-    globgstatus.onpause = 0;
     globgstatus.workingdice = 0;
     globgstatus.robotpassing = 0;
     globgstatus.robotpawnshow = 0;
@@ -690,7 +715,6 @@ void settings_changed(GlobCfg *savedcfg)
         savedcfg->gheight != globcfg.gheight ||
         (globcfg.gwidth > 1150 &&
          savedcfg->maxrsz != globcfg.maxrsz)) {
-        PTSaveToFile(&globpt, RESTART_FILE);
         clean_up();
         GUIEnd();
         GrSetMode(GR_default_text);
@@ -705,15 +729,11 @@ void settings_changed(GlobCfg *savedcfg)
         inicia_globgpos();
         setup_gparchis();
         GrSetContext(globctx);
-        if (!check_saved_game(RESTART_FILE, 0, globgstatus.onpause)) {
-            ini_globgstatus();
-            paint_main_screen();
-        }
+        paint_main_screen();
         return;
     }
 
     if (savedcfg->lang != globcfg.lang) {
-        PTSaveToFile(&globpt, RESTART_FILE);
         clean_up();
         GUIEnd();
         GrI18nSetLang(globcfg.lang);
@@ -726,10 +746,7 @@ void settings_changed(GlobCfg *savedcfg)
         inicia_globgpos();
         setup_gparchis();
         GrSetContext(globctx);
-        if (!check_saved_game(RESTART_FILE, 0, globgstatus.onpause)) {
-            ini_globgstatus();
-            paint_main_screen();
-        }
+        paint_main_screen();
         return;
     }
 
@@ -749,7 +766,6 @@ void window_resized(int width, int height)
 {
     globcfg.gwidth = width;
     globcfg.gheight = height;
-    PTSaveToFile(&globpt, RESTART_FILE);
     clean_up();
     GUIEnd();
     GrI18nSetLang(globcfg.lang);
@@ -763,10 +779,7 @@ void window_resized(int width, int height)
     inicia_globgpos();
     setup_gparchis();
     GrSetContext(globctx);
-    if (!check_saved_game(RESTART_FILE, 0, globgstatus.onpause)) {
-        ini_globgstatus();
-        paint_main_screen();
-    }
+    paint_main_screen();
 }
 
 /***********************/
@@ -795,7 +808,11 @@ void paint_main_screen(void)
 
     paint_board();
     paint_progres();
-    paint_dice(0, playercolor[globpt.pp.turno]);
+    if (globpt.status == PST_WAITPASSACK || globpt.status == PST_WAITJG)
+        paint_dice(globpt.vdice, playercolor[globpt.pp.turno]);
+    else
+        paint_dice(0, playercolor[globpt.pp.turno]);
+    calc_playable_pawn_positions();
     set_instructions();
 
     GUIDBRestartBltsToScreen();
@@ -841,7 +858,7 @@ void show_manual_dice(int show)
 
 /***********************/
 
-int check_saved_game(char *fname, int ask, int onpause)
+int check_saved_game(char *fname, int ask)
 {
     static char *info[2];
 
@@ -869,16 +886,11 @@ int check_saved_game(char *fname, int ask, int onpause)
     }
 
     if (ret == 1) {
-        if (PTLoadFromFile(&globpt, fname)) {
+        if (load_game(fname)) {
             AnimationsStopAll();
             genera_munecos(&(globpt.pp.dp));
             ini_globgstatus();
-            if (onpause) globgstatus.onpause = onpause;
             paint_main_screen();
-            if (globpt.status == PST_WAITPASSACK ||
-                globpt.status == PST_WAITJG)
-                paint_dice(globpt.vdice, playercolor[globpt.pp.turno]);
-            calc_playable_pawn_positions();
         } else {
             ret = 0;
         }
@@ -1068,15 +1080,26 @@ void set_buttons_text(char *tb1, char *tb2)
 
 void set_instructions(void)
 {
-    if (globgstatus.onpause) {
-        paint_instruction(_(SMAIN_GPAUSED), NULL);
-        set_buttons_text("", _(SMAIN_CONT));
+    if (globonpause) {
+        if (globonmoviola) {
+            paint_instruction(_(SMAIN_CONTMOVL), NULL);
+            set_buttons_text("", _(SMAIN_CONT));
+        } else {
+            paint_instruction(_(SMAIN_GPAUSED), NULL);
+            set_buttons_text("", _(SMAIN_CONT));
+        }
+        return;
+    }
+
+    if (globonmoviola) {
+        paint_instruction(_(SMAIN_ONMOVL), NULL);
+        set_buttons_text(_(SMAIN_STOPMOVL), _(SMAIN_PAUSE));
         return;
     }
 
     if (globpt.status == PST_ENDGAME) {
         paint_instruction(_(SMAIN_GOVER), NULL);
-        set_buttons_text("", _(SMAIN_REPGAME));
+        set_buttons_text(_(SMAIN_REPLAY), _(SMAIN_REPGAME));
         return;
     }
 
@@ -1146,10 +1169,42 @@ void do_next_step(void)
 void play_partida_command(int command, int id)
 {
     int vdice, njg;
+    DefPartida dpaux;
+
+    if (globonmoviola) {
+        if (command == COMMAND_A) {
+            globpt = globptsaved;
+            AnimationsStopAll();
+            ini_globgstatus();
+            globonmoviola = 0;
+            set_instructions();
+            paint_main_screen();
+        } else if (command == COMMAND_B) {
+            if (globonpause) {
+                globonpause = 0;
+                set_instructions();
+            } else {
+                globonpause = 1;
+                set_instructions();
+            }
+        }
+        return;
+    }
 
     if (globpt.status == PST_ENDGAME) {
-        if (command == COMMAND_B)
+        if (command == COMMAND_A) {
+            globptsaved = globpt;
+            MPResetMovl(&globmovpt);
+            AnimationsStopAll();
+            dpaux = globpt.pp.dp;
+            PTInit(&globpt, &dpaux);
+            ini_globgstatus();
+            globonmoviola = 1;
+            set_instructions();
+            paint_main_screen();
+        } else if (command == COMMAND_B) {
             GrEventParEnqueue(GREV_COMMAND, COMMAND_REPEATGAME, 0, 0, 0);
+        }
         return;
     }
 
@@ -1167,7 +1222,7 @@ void play_partida_command(int command, int id)
     }
 
     if (globpt.pp.dp.playertype[globpt.pp.turno] == PERSON) {
-        globgstatus.onpause = 0;
+        globonpause = 0;
         switch (globpt.status) {
             case PST_WAITDICE :
                 if (command == COMMAND_A) {
@@ -1180,11 +1235,13 @@ void play_partida_command(int command, int id)
                     }
                 }
                 if (command == COMMAND_B) {
+                    //MPPrint(&globmovpt, stdout);
                     //StartRoTblAnimation(90);
                 }
                 break;
             case PST_WAITPASSACK :
                 if (command == COMMAND_A) {
+                    MPAddPass(&globmovpt, globpt.pp.turno, globpt.vdice);
                     do_next_step();
                     paint_board();
                     paint_dice(0, playercolor[globpt.pp.turno]);
@@ -1209,11 +1266,11 @@ void play_partida_command(int command, int id)
         }
     } else {
         if (command == COMMAND_B) {
-            if (globgstatus.onpause) {
-                globgstatus.onpause = 0;
+            if (globonpause) {
+                globonpause = 0;
                 set_instructions();
             } else {
-                globgstatus.onpause = 1;
+                globonpause = 1;
                 set_instructions();
             }
             //StartRoTblAnimation(-90);
@@ -1230,7 +1287,7 @@ void play_partida_auto(void)
 {
     int vdice;
 
-    if (globgstatus.onpause) return;
+    if (globonpause) return;
 
     if (globpt.pp.dp.manualdice && globpt.status == PST_WAITDICE) return;
 
@@ -1248,6 +1305,7 @@ void play_partida_auto(void)
             case PST_WAITJG :
                 if (globgstatus.oncarrera == 2) {
                     globgstatus.oncarrera = 0;
+                    MPAddJg(&globmovpt, &(globpt.gjg.jg[globpt.njgselec]));
                     do_next_step();
                     paint_progres();
                     paint_board();
@@ -1279,6 +1337,7 @@ void play_partida_auto(void)
                     StartRPassAnimation(1*globcfg.speed);
                     globgstatus.robotpassing = 1;
                 } else if (globgstatus.robotpassing == 2) {
+                    MPAddPass(&globmovpt, globpt.pp.turno, globpt.vdice);
                     do_next_step();
                     paint_board();
                     paint_dice(0, playercolor[globpt.pp.turno]);
@@ -1305,6 +1364,7 @@ void play_partida_auto(void)
                     }
                 } else if (globgstatus.oncarrera == 2) {
                     globgstatus.oncarrera = 0;
+                    MPAddJg(&globmovpt, &(globpt.gjg.jg[globpt.njgselec]));
                     do_next_step();
                     paint_progres();
                     paint_board();
@@ -1316,6 +1376,84 @@ void play_partida_auto(void)
                 }
                 break;
         }
+    }
+}
+
+/***********************/
+
+void play_partida_moviola(void)
+{
+    RegMov *rmovact;
+    int vdice;
+
+    if (globonpause) return;
+
+    if (globpt.status == PST_ENDGAME) {
+        GrEventParEnqueue(GREV_COMMAND, COMMAND_A, 0, 0, 0);
+    }
+
+    rmovact = MPGetJgMovl(&globmovpt);
+
+    switch (globpt.status) {
+        case PST_WAITDICE :
+            if (globgstatus.workingdice == 0) {
+                vdice = (rmovact->vdice == 7) ? 6 : rmovact->vdice;
+                PTSetDice(&globpt, vdice);
+                StartDiceAnimation(2*globcfg.speed, globpt.vdice,
+                                   playercolor[globpt.pp.turno]);
+                globgstatus.workingdice = 1;
+            } else if (globgstatus.workingdice == 2) {
+                PTNextStep(&globpt);
+                //paint_board();
+                globgstatus.workingdice = 0;
+            }
+            break;
+        case PST_WAITPASSACK :
+            if (globgstatus.robotpassing == 0) {
+                StartRPassAnimation(1*globcfg.speed);
+                globgstatus.robotpassing = 1;
+            } else if (globgstatus.robotpassing == 2) {
+                PTNextStep(&globpt);
+                paint_board();
+                paint_dice(0, playercolor[globpt.pp.turno]);
+                globgstatus.robotpassing = 0;
+                MPForwardMovl(&globmovpt);
+            }
+            break;
+        case PST_WAITJG :
+            if (globgstatus.oncarrera == 0) {
+                if (globgstatus.robotpawnshow == 0) {
+                    int njg = 0;
+                    for (int i=0; i<globpt.gjg.njg; i++) {
+                        Jugada *jg = &(globpt.gjg.jg[i]);
+                        if (jg->nficha == rmovact->nf && jg->hptep == rmovact->hpc) {
+                            njg = i;
+                            break;
+                        }
+                    }
+                    PTSetJg(&globpt,njg);
+                    paint_board();
+                    StartRShowAnimation(2*globcfg.speed);
+                    globgstatus.robotpawnshow = 1;
+                } else if (globgstatus.robotpawnshow == 2) {
+                    set_globcarr(&(globpt.gjg.jg[globpt.njgselec]));
+                    globgstatus.oncarrera = 1;
+                    StartCarreraAnimation(globcfg.speed);
+                    globgstatus.robotpawnshow = 0;
+                }
+            } else if (globgstatus.oncarrera == 2) {
+                globgstatus.oncarrera = 0;
+                PTNextStep(&globpt);
+                paint_progres();
+                paint_board();
+                MPForwardMovl(&globmovpt);
+                if (globpt.status == PST_WAITPASSACK ||
+                    globpt.status == PST_WAITJG)
+                    paint_dice(globpt.vdice, playercolor[globpt.pp.turno]);
+                else
+                    paint_dice(0, playercolor[globpt.pp.turno]);
+            }
+            break;
     }
 }
 
@@ -1501,4 +1639,66 @@ void save_globcfg(char *fname)
     fprintf(f, "MRZ=%d\n", globcfg.maxrsz);
     fprintf(f, "TOP=%d\n", globcfg.testopt);
     fclose(f);
+}
+
+/***********************/
+
+static char SAVE_SIGNATURE[4] = {'P','v','5','1'};
+
+/***********************/
+
+int save_game(char *fname)
+{
+    FILE *f;
+
+    f = fopen(fname, "wb");
+    if (f == NULL) return 0;
+
+    fwrite((void *)SAVE_SIGNATURE, 4, 1, f);
+    fwrite((void *)&globonpause, sizeof(int), 1, f);
+    fwrite((void *)&globonmoviola, sizeof(int), 1, f);
+    PTSaveToFile(&globpt, f);
+    PTSaveToFile(&globptsaved, f);
+    MPSaveToFile(&globmovpt, f);
+    fclose(f);
+
+    return 1;
+}
+
+/***********************/
+
+int load_game(char *fname)
+{
+    FILE *f;
+    char buf[4];
+    int len, onpause, onmoviola;
+    Partida pt2, pt2saved;
+    MovPartida mp2 = {0, 0, 0, NULL};
+
+    f = fopen(fname, "rb");
+    if (f == NULL) return 0;
+
+    len = fread(buf, 4, 1, f);
+    if (len != 1 || memcmp(buf, SAVE_SIGNATURE, 4) != 0) goto error;
+    len = fread(&onpause, sizeof(int), 1, f);
+    if (len != 1) goto error;
+    len = fread(&onmoviola, sizeof(int), 1, f);
+    if (len != 1) goto error;
+    if (!PTLoadFromFile(&pt2, f)) goto error;
+    if (!PTLoadFromFile(&pt2saved, f)) goto error;
+    if (!MPLoadFromFile(&mp2, f)) goto error;
+
+    globonpause = onpause;
+    globonmoviola = onmoviola;
+    globpt = pt2;
+    globptsaved = pt2saved;
+    free(globmovpt.r);
+    globmovpt = mp2;
+    fclose(f);
+
+    return 1;
+
+error:
+    fclose(f);
+    return 0;
 }

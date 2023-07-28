@@ -1,7 +1,8 @@
 /*
  * engine.h --- parchis engine include file
  * 
- * Copyright (c) 2020 Mariano Alvarez Fernandez (malfer@telefonica.net)
+ * Copyright (c) 2020,2034 Mariano Alvarez Fernandez
+ * (malfer@telefonica.net)
  *
  * This file is part of Parchís5, a popular spanish game
  *
@@ -291,5 +292,37 @@ void PTSetDice(Partida *pt, int vdice);
 void PTSetJg(Partida *pt, int njg);
 void PTSelectRobotJg(Partida *pt);
 void PTNextStep(Partida *pt);
-int PTSaveToFile(Partida *pt, char *fname);
-int PTLoadFromFile(Partida *pt, char *fname);
+int PTSaveToFile(Partida *pt, FILE *f);
+int PTLoadFromFile(Partida *pt, FILE *f);
+
+// partida moves
+
+typedef struct {
+    char color;    // player color
+    char vdice;    // dice value
+    char nf;       // pawn number (-1 if pass)
+    char hpc;      // special case, do bridge with mate, 0=no, 1=yes
+} RegMov;
+
+typedef struct {
+    int maxnjg;         // max num of jugadas, can be extended
+    int njg;            // num of jugadas
+    int posmoviola;     // moviola position;
+    RegMov *r;          // registers
+} MovPartida;
+
+// in emovpart.c
+
+int MPExtend(MovPartida *mp);
+void MPClear(MovPartida *mp);
+void MPClean(MovPartida *mp);
+int MPAddReg(MovPartida *mp, int color, int vdice, int nf, int hpc);
+int MPAddPass(MovPartida *mp, int color, int vdice);
+int MPAddJg(MovPartida *mp, Jugada *jg);
+RegMov *MPGetJg(MovPartida *mp, int n);
+void MPResetMovl(MovPartida *mp);
+int MPForwardMovl(MovPartida *mp);
+RegMov *MPGetJgMovl(MovPartida *mp);
+void MPPrint(MovPartida *mp, FILE *f);
+void MPSaveToFile(MovPartida *mp, FILE *f);
+int MPLoadFromFile(MovPartida *mp, FILE *f);

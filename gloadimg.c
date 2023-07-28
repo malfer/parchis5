@@ -1,7 +1,8 @@
 /*
  * gloadimg.c --- load images
  * 
- * Copyright (c) 2020 Mariano Alvarez Fernandez (malfer@telefonica.net)
+ * Copyright (c) 2020,2023 Mariano Alvarez Fernandez
+ * (malfer@telefonica.net)
  *
  * This file is part of Parchís5, a popular spanish game
  *
@@ -87,6 +88,7 @@
 #define DIBROBOTBL "pfiles/robotbl.png"
 #define PODIUM "pfiles/podium.png"
 #define PODIUMP "pfiles/podiump.png"
+#define MOVIOLA "pfiles/moviola2.png"
 
 GrContext *imgtbl = NULL;
 GrContext *imgtitle = NULL;
@@ -102,6 +104,7 @@ GrContext *imgmuneco[4] = {NULL, NULL, NULL, NULL};
 GrContext *imgmunecobl[4] = {NULL, NULL, NULL, NULL};
 GrContext *imgpodium = NULL;
 GrContext *imgpodiump = NULL;
+GrContext *imgmoviola = NULL;
 
 static char *tblfn[3] = {TABLERO0, TABLERO1, TABLERO2};
 static GrContext *imgperson = NULL;
@@ -387,6 +390,16 @@ void load_images(void)
     }
     aux = load_img(PODIUMP, 1);
     StbStretchBltT(imgpodiump, 0, 0, globvar.podiumpdim-1, globvar.podiumpdim-1,
+                   aux, 0, 0, aux->gc_xmax, aux->gc_ymax, TRANSPARENT&0x00FFFFFF);
+    GrDestroyContext(aux);
+
+    if (imgmoviola) GrDestroyContext(imgmoviola);
+    imgmoviola = GrCreateContext(globvar.movioladim, globvar.movioladim, NULL, NULL);
+    if (imgmoviola == NULL) {
+        disaster("creating imgmoviola");
+    }
+    aux = load_img(MOVIOLA, 1);
+    StbStretchBltT(imgmoviola, 0, 0, globvar.movioladim-1, globvar.movioladim-1,
                    aux, 0, 0, aux->gc_xmax, aux->gc_ymax, TRANSPARENT&0x00FFFFFF);
     GrDestroyContext(aux);
 }

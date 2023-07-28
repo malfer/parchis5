@@ -25,6 +25,7 @@ OBJS = dlgnewgm.o \
        egrpjg.o   \
        eanlglb.o  \
        epartida.o \
+       emovpart.o \
        histpart.o \
        lg_eng.o   \
        lg_esp.o   \

@@ -1,7 +1,8 @@
 /*
  * epartida.c --- Parchis engine, Partida functions
  * 
- * Copyright (c) 2020 Mariano Alvarez Fernandez (malfer@telefonica.net)
+ * Copyright (c) 2020,2023 Mariano Alvarez Fernandez
+ * (malfer@telefonica.net)
  *
  * This file is part of Parchís5, a popular spanish game
  *
@@ -25,7 +26,6 @@
 #include <string.h>
 #include "engine.h"
 
-static char SAVE_SIGNATURE[4] = {'P','v','5','0'};
 
 /***********************/
 
@@ -176,44 +176,21 @@ void PTNextStep(Partida *pt)
 
 /***********************/
 
-int PTSaveToFile(Partida *pt, char *fname)
+int PTSaveToFile(Partida *pt, FILE *f)
 {
-    FILE *f;
-
-    f = fopen(fname, "wb");
-    if (f == NULL) return 0;
-
-    fwrite((void *)SAVE_SIGNATURE, 4, 1, f);
     fwrite((void *)pt, sizeof(Partida), 1, f);
-    fclose(f);
 
     return 1;
 }
 
 /***********************/
 
-int PTLoadFromFile(Partida *pt, char *fname)
+int PTLoadFromFile(Partida *pt, FILE *f)
 {
-    FILE *f;
-    char buf[4];
-    Partida pt2;
     int len;
 
-    f = fopen(fname, "rb");
-    if (f == NULL) return 0;
-
-    fread(buf, 4, 1, f);
-    if (memcmp(buf, SAVE_SIGNATURE, 4) != 0) {
-        fclose(f);
-        return 0;
-    }
-    len = fread(&pt2, sizeof(Partida), 1, f);
-    if (len != 1) {
-        fclose(f);
-        return 0;
-    }
-    *pt = pt2;
-    fclose(f);
+    len = fread(pt, sizeof(Partida), 1, f);
+    if (len != 1) return 0;
 
     return 1;
 }

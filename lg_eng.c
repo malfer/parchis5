@@ -1,7 +1,8 @@
 /*
  * lg_eng.c --- English strings
  * 
- * Copyright (c) 2020 Mariano Alvarez Fernandez (malfer@telefonica.net)
+ * Copyright (c) 2020,2023 Mariano Alvarez Fernandez
+ * (malfer@telefonica.net)
  *
  * This file is part of Parchís5, a popular spanish game
  *
@@ -35,7 +36,7 @@ static char *sgn[6] = {
     "Off"};
 
 static char *smp[9] = {
-    "     PARCHIS v5, MAIN MENU",
+    "    PARCHIS v5.1, MAIN MENU",
     "\x01\x02 &New game",
     "\x03\x04 &Game statistics",
     "\x05\x06 Game spee&d",
@@ -52,14 +53,15 @@ static char *smv[5] = {
     "&Very fast",
     "&Instantaneous"};
 
-static char *smt[7] = {
+static char *smt[8] = {
     "&Test pawns",
     "Turn le&ft 90º slow",
     "Turn ri&ght 90º fast",
     "&Save game",
     "&Load game",
     "&Auto repeat game",
-    "&Print analysis"};
+    "&Print analysis",
+    "P&rint moves"};
 
 static char *smh[4] = {
     "&Single game rules",
@@ -67,7 +69,7 @@ static char *smh[4] = {
     "&Game instructions",
     "&About"};
 
-static char *smain[24] = {
+static char *smain[28] = {
     "Menu",
     "Game paused",
     "Continue",
@@ -91,7 +93,11 @@ static char *smain[24] = {
     "Pause",
     "Please give me",
     "a dice value",
-    "Repeat game"};
+    "Replay",
+    "Repeat game",
+    "Replaying game",
+    "Replay paused",
+    "Stop"};
 
 static char *sdex[2] = {
     "Exit",
@@ -123,10 +129,10 @@ static char *sdast[3] = {
     "Active test options"};
 
 static char *sdab[6] = {
-    "About Parchís v5",
-    "(C)2020 Mariano Alvarez",
+    "About Parchís v5.1",
+    "(C)2020,2023 Mariano Alvarez",
     "The parchís is a very popular board game in Spain",
-    "Parchís v5 is Free Software,",
+    "Parchís v5.1 is Free Software,",
     "it makes use of the MRGX+GrGUI graphics library",
     "see readme.txt file for details"};
 
@@ -179,9 +185,9 @@ void AddEngStrings(int lid)
     GrI18nAddStrings(lid, SGN_OK, 6, (void **)sgn);
     GrI18nAddStrings(lid, SMP_TITLE, 9, (void **)smp);
     GrI18nAddStrings(lid, SMV_SLOW, 5, (void **)smv);
-    GrI18nAddStrings(lid, SMT_TPAWN, 7, (void **)smt);
+    GrI18nAddStrings(lid, SMT_TPAWN, 8, (void **)smt);
     GrI18nAddStrings(lid, SMH_SRULES, 4, (void **)smh);
-    GrI18nAddStrings(lid, SMAIN_MENU, 24, (void **)smain);
+    GrI18nAddStrings(lid, SMAIN_MENU, 28, (void **)smain);
     GrI18nAddStrings(lid, SDEX_TITLE, 2, (void **)sdex);
     GrI18nAddStrings(lid, SDSV_TITLE, 3, (void **)sdsv);
     GrI18nAddStrings(lid, SDST_TITLE, 13, (void **)sdst);

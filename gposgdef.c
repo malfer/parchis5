@@ -1,7 +1,8 @@
 /*
  * gposgdef.c --- graphics coordinates of diferent places
  * 
- * Copyright (c) 2020 Mariano Alvarez Fernandez (malfer@telefonica.net)
+ * Copyright (c) 2020,2023 Mariano Alvarez Fernandez
+ * (malfer@telefonica.net)
  *
  * This file is part of Parchís5, a popular spanish game
  *
@@ -204,6 +205,9 @@ void inicia_globgpos(void)
     set_posg(&(globgpos.podppos[1]), 350, 675);
     set_posg(&(globgpos.podppos[2]), 432, 693);
     set_posg(&(globgpos.podppos[3]), 510, 693);
+
+//    set_posg(&(globgpos.moviola), 410, 410);
+    set_posg(&(globgpos.moviola), 386, 386);
 }
 
 /***********************/

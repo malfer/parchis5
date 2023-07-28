@@ -1,7 +1,8 @@
 /*
  * gpaint.c --- paint functions
  * 
- * Copyright (c) 2020 Mariano Alvarez Fernandez (malfer@telefonica.net)
+ * Copyright (c) 2020,2023 Mariano Alvarez Fernandez
+ * (malfer@telefonica.net)
  *
  * This file is part of Parchís5, a popular spanish game
  *
@@ -60,6 +61,7 @@ void paint_board(void)
     paint_munecos2();
     paint_medals2();
     paint_podium();
+    paint_moviola();
 
     GrSetContext(globvar.tbl);
     GrBitBlt(NULL, 0, 0, rottbl, 0, 0, rottbl->gc_xmax, rottbl->gc_ymax, GrWRITE);
@@ -67,6 +69,16 @@ void paint_board(void)
     GUIDBCurCtxBltToScreen();
 
     GrSetContext(&grcaux);
+}
+
+/***********************/
+
+void paint_moviola(void)
+{
+    if (globonmoviola == 0) return;
+
+    GrBitBlt(NULL, globgpos.moviola.x, globgpos.moviola.y, imgmoviola, 0, 0,
+                 imgmoviola->gc_xmax, imgmoviola->gc_ymax, TRANSPARENT);
 }
 
 /***********************/
