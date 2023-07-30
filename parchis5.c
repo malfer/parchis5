@@ -1083,7 +1083,7 @@ void set_instructions(void)
     if (globonpause) {
         if (globonmoviola) {
             paint_instruction(_(SMAIN_CONTMOVL), NULL);
-            set_buttons_text("", _(SMAIN_CONT));
+            set_buttons_text(_(SMAIN_STOPMOVL), _(SMAIN_CONT));
         } else {
             paint_instruction(_(SMAIN_GPAUSED), NULL);
             set_buttons_text("", _(SMAIN_CONT));
@@ -1174,6 +1174,7 @@ void play_partida_command(int command, int id)
     if (globonmoviola) {
         if (command == COMMAND_A) {
             globpt = globptsaved;
+            globonpause = 0;
             AnimationsStopAll();
             ini_globgstatus();
             globonmoviola = 0;

@@ -35,7 +35,7 @@ OBJS = dlgnewgm.o \
 all: parchis5
 
 parchis5: parchis5.o gparchis.h engine.h i18n.h $(OBJS)
-	$(CC) $(CCOPT) $(LDOPT) -o $@ parchis5.o $(OBJS) -lmgrx -lpng -lz -lm
+	$(CC) $(CCOPT) $(LDOPT) -o $@ parchis5.o $(OBJS) -lmgrx -ldrm -lpng -lz -lm
 
 parchis5.o: gparchis.h engine.h i18n.h
 
