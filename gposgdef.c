@@ -206,8 +206,8 @@ void inicia_globgpos(void)
     set_posg(&(globgpos.podppos[2]), 432, 693);
     set_posg(&(globgpos.podppos[3]), 510, 693);
 
-//    set_posg(&(globgpos.moviola), 410, 410);
-    set_posg(&(globgpos.moviola), 386, 386);
+//    set_posg(&(globgpos.moviola), 386, 386);
+    set_posg(&(globgpos.moviola), 374, 374);
 }
 
 /***********************/

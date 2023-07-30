@@ -44,6 +44,8 @@ void paint_board(void)
     
     GrBitBlt(NULL, 0, 0, imgtbl, 0, 0, imgtbl->gc_xmax, imgtbl->gc_ymax, GrWRITE);
 
+    paint_moviola();
+
     if (globcfg.testingfichas)
         test_fichas();
     else
@@ -61,7 +63,7 @@ void paint_board(void)
     paint_munecos2();
     paint_medals2();
     paint_podium();
-    paint_moviola();
+//    paint_moviola();
 
     GrSetContext(globvar.tbl);
     GrBitBlt(NULL, 0, 0, rottbl, 0, 0, rottbl->gc_xmax, rottbl->gc_ymax, GrWRITE);
@@ -75,10 +77,14 @@ void paint_board(void)
 
 void paint_moviola(void)
 {
+    GrContext *rot;
+
     if (globonmoviola == 0) return;
 
-    GrBitBlt(NULL, globgpos.moviola.x, globgpos.moviola.y, imgmoviola, 0, 0,
-                 imgmoviola->gc_xmax, imgmoviola->gc_ymax, TRANSPARENT);
+    rot = CtxRotate(imgmoviola, -globcfg.rotang, TRANSPARENT & 0xFFFFFF);
+    GrBitBlt(NULL, globgpos.moviola.x, globgpos.moviola.y, rot, 0, 0,
+                 rot->gc_xmax, rot->gc_ymax, TRANSPARENT);
+    GrDestroyContext(rot);
 }
 
 /***********************/
@@ -155,7 +161,7 @@ void paint_fichas(void)
             if (!globgstatus.blinkpawn &&
                 globpt.status == PST_WAITJG && c == globpt.pp.turno) {
                 for (k=0; k<globpt.gjg.njg; k++) {
-                    if (globpt.pp.dp.playertype[c] == PERSON) {
+                    if (!globonmoviola && globpt.pp.dp.playertype[c] == PERSON) {
                         if (j == globpt.gjg.jg[k].nficha)
                             pawn = imgpawndot[c];
                     }

@@ -88,7 +88,7 @@
 #define DIBROBOTBL "pfiles/robotbl.png"
 #define PODIUM "pfiles/podium.png"
 #define PODIUMP "pfiles/podiump.png"
-#define MOVIOLA "pfiles/moviola2.png"
+#define MOVIOLA "pfiles/moviola3.png"
 
 GrContext *imgtbl = NULL;
 GrContext *imgtitle = NULL;

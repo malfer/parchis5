@@ -432,7 +432,7 @@ void setup_globvar(void)
 #define MUNECODIM 96   // this must be the muñeco image dim
 #define PODIUMDIM 268  // this must be the single podium image dim
 #define PODIUMPDIM 328 // this must be the pairs podium image dim
-#define MOVIOLADIM 107  // this must be moviola image dim
+#define MOVIOLADIM 130 // this must be moviola image dim
 
 #define DICEDIM 61               // this must be the DICE image dim
 #define DICEBOXH (DICEDIM + 80)  // Dice box height dimension
