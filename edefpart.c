@@ -130,3 +130,14 @@ int DPSameTeam(int p1, int p2)
     if (p1 == VERD && p2 == AZUL) return 1;
     return 0;
 }
+
+int DPTeamColor(int c)
+{
+    switch (c) {
+        case AMAR: return ROJO;
+        case ROJO: return AMAR;
+        case AZUL: return VERD;
+        case VERD: return AZUL;
+    }
+    return -1;
+}

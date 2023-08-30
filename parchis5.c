@@ -433,6 +433,7 @@ void setup_globvar(void)
 #define PODIUMDIM 268  // this must be the single podium image dim
 #define PODIUMPDIM 328 // this must be the pairs podium image dim
 #define MOVIOLADIM 130 // this must be moviola image dim
+#define BARRERADIM 86  // this must be the barrera image long dim
 
 #define DICEDIM 61               // this must be the DICE image dim
 #define DICEBOXH (DICEDIM + 80)  // Dice box height dimension
@@ -461,6 +462,7 @@ void setup_globvar(void)
     globvar.podiumdim = round(PODIUMDIM * globvar.scale);
     globvar.podiumpdim = round(PODIUMPDIM * globvar.scale);
     globvar.movioladim = round(MOVIOLADIM * globvar.scale);
+    globvar.barreradim = round(BARRERADIM * globvar.scale);
     globvar.xorg = (GrSizeX() - (globvar.tbldim + CTLDIMW + 4)) / 2;
     globvar.yorg = (GrSizeY() - globvar.tbldim) / 2;
     //printf("%d\n", globvar.tbldim);
@@ -622,8 +624,6 @@ void setup_gparchis(void)
     cintcolor[3] = WEBC_LIMEGREEN;
     cintcolor[4] = WEBC_DODGERBLUE;
 
-//    PTInit(&globpt, &(globcfg.defaultdp));
-//    MPClear(&globmovpt);
     genera_munecos(&(globpt.pp.dp));
 }
 
@@ -711,6 +711,8 @@ void clean_up(void)
 
 void settings_changed(GlobCfg *savedcfg)
 {
+    int paint = 0;
+
     if (savedcfg->gwidth != globcfg.gwidth ||
         savedcfg->gheight != globcfg.gheight ||
         (globcfg.gwidth > 1150 &&
@@ -752,12 +754,18 @@ void settings_changed(GlobCfg *savedcfg)
 
     if (savedcfg->nboard != globcfg.nboard) {
         load_board();
-        paint_board();
+        paint = 1;
+    }
+
+    if (savedcfg->showbarrs != globcfg.showbarrs) {
+        paint = 1;
     }
 
     if (savedcfg->testopt != globcfg.testopt) {
         check_testoptions();
     }
+
+    if (paint) paint_board();
 }
     
 /***********************/
@@ -1567,6 +1575,7 @@ void load_globcfg(char *fname)
     globcfg.gheight = 950;
     globcfg.maxrsz = 0;
     globcfg.nboard = 1;
+    globcfg.showbarrs = 1;
     globcfg.speed = 7;
     req_speed = 7;
     globcfg.rotang = 0;
@@ -1604,6 +1613,8 @@ void load_globcfg(char *fname)
             globcfg.nboard = atoi(&(s[4]));
             if (globcfg.nboard < 0 || globcfg.nboard > LASTNBOARD)
                 globcfg.nboard = 0;
+        } else if (strncmp(s, "SHB=", 4) == 0) {
+            globcfg.showbarrs = (atoi(&(s[4])) != 0) ? 1 : 0;
         } else if (strncmp(s, "SPD=", 4) == 0) {
             req_speed = atoi(&(s[4]));
         } else if (strncmp(s, "ROT=", 4) == 0) {
@@ -1636,6 +1647,7 @@ void save_globcfg(char *fname)
     DPToString(&(globcfg.defaultdp), s);
     fprintf(f, "DFP=%s\n", s);
     fprintf(f, "BRD=%d\n", globcfg.nboard);
+    fprintf(f, "SHB=%d\n", globcfg.showbarrs);
     fprintf(f, "SPD=%d\n", globcfg.speed);
     fprintf(f, "MRZ=%d\n", globcfg.maxrsz);
     fprintf(f, "TOP=%d\n", globcfg.testopt);

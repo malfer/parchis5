@@ -111,6 +111,7 @@ enum SID {
     SDST_GOGDIM,
     SDST_GOLANG,
     SDST_GOTBL,
+    SDST_GOSHB,
     SDST_ADV,
 
     SDAST_TITLE,             // advanced settings dialog

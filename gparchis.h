@@ -33,6 +33,7 @@ typedef struct {
     int podiumdim;        // single podium dimension
     int podiumpdim;       // pairs podium dimension
     int movioladim;       // moviola dimension
+    int barreradim;       // barrera dimension wide
     int xorg, yorg;       // x,y offset
     int xmenu, ymenu;     // menu position
     GrContext *tbl;       // board subcontext
@@ -50,6 +51,7 @@ typedef struct {
     int maxrsz;           // if =1 don't resize if dims>default
     DefPartida defaultdp; // default DefPartida
     int nboard;           // board number to use
+    int showbarrs;        // show (1) or not show (0) barreras
     int speed;            // actual speed of animations 10, 7, 3, 1, 0
     int rotang;           // actual angle the board is rotated
     int testopt;          // activate menu test options
@@ -108,6 +110,8 @@ extern GrContext *imgmunecobl[4];
 extern GrContext *imgpodium;
 extern GrContext *imgpodiump;
 extern GrContext *imgmoviola;
+extern GrContext *imgbarrerah;
+extern GrContext *imgbarrerav;
 
 void load_board(void);
 void load_images(void);
@@ -169,6 +173,7 @@ void paint_moviola(void);
 void paint_munecos(void);
 void paint_munecos2(void);
 void paint_fichas(void);
+void paint_barreras(void);
 void paint_carrera(void);
 void paint_medals(void);
 void paint_medals2(void);

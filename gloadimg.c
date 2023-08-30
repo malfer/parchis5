@@ -89,6 +89,8 @@
 #define PODIUM "pfiles/podium.png"
 #define PODIUMP "pfiles/podiump.png"
 #define MOVIOLA "pfiles/moviola3.png"
+#define BARRERAH "pfiles/barrerah.png"
+#define BARRERAV "pfiles/barrerav.png"
 
 GrContext *imgtbl = NULL;
 GrContext *imgtitle = NULL;
@@ -105,6 +107,8 @@ GrContext *imgmunecobl[4] = {NULL, NULL, NULL, NULL};
 GrContext *imgpodium = NULL;
 GrContext *imgpodiump = NULL;
 GrContext *imgmoviola = NULL;
+GrContext *imgbarrerah = NULL;
+GrContext *imgbarrerav = NULL;
 
 static char *tblfn[3] = {TABLERO0, TABLERO1, TABLERO2};
 static GrContext *imgperson = NULL;
@@ -400,6 +404,26 @@ void load_images(void)
     }
     aux = load_img(MOVIOLA, 1);
     StbStretchBltT(imgmoviola, 0, 0, globvar.movioladim-1, globvar.movioladim-1,
+                   aux, 0, 0, aux->gc_xmax, aux->gc_ymax, TRANSPARENT&0x00FFFFFF);
+    GrDestroyContext(aux);
+
+    if (imgbarrerah) GrDestroyContext(imgbarrerah);
+    imgbarrerah = GrCreateContext(globvar.barreradim, globvar.pawndim, NULL, NULL);
+    if (imgbarrerah == NULL) {
+        disaster("creating imgbarrerah");
+    }
+    aux = load_img(BARRERAH, 1);
+    StbStretchBltT(imgbarrerah, 0, 0, globvar.barreradim, globvar.pawndim-1,
+                   aux, 0, 0, aux->gc_xmax, aux->gc_ymax, TRANSPARENT&0x00FFFFFF);
+    GrDestroyContext(aux);
+
+    if (imgbarrerav) GrDestroyContext(imgbarrerav);
+    imgbarrerav = GrCreateContext(globvar.pawndim, globvar.barreradim, NULL, NULL);
+    if (imgbarrerav == NULL) {
+        disaster("creating imgbarrerav");
+    }
+    aux = load_img(BARRERAV, 1);
+    StbStretchBltT(imgbarrerav, 0, 0, globvar.pawndim-1, globvar.barreradim-1,
                    aux, 0, 0, aux->gc_xmax, aux->gc_ymax, TRANSPARENT&0x00FFFFFF);
     GrDestroyContext(aux);
 }

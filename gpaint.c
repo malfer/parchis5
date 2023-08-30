@@ -48,8 +48,11 @@ void paint_board(void)
 
     if (globcfg.testingfichas)
         test_fichas();
-    else
+    else {
         paint_fichas();
+        if (globcfg.showbarrs)
+            paint_barreras();
+    }
 
     if (globgstatus.oncarrera)
         paint_carrera();
@@ -63,7 +66,6 @@ void paint_board(void)
     paint_munecos2();
     paint_medals2();
     paint_podium();
-//    paint_moviola();
 
     GrSetContext(globvar.tbl);
     GrBitBlt(NULL, 0, 0, rottbl, 0, 0, rottbl->gc_xmax, rottbl->gc_ymax, GrWRITE);
@@ -214,6 +216,69 @@ void paint_fichas(void)
                 y = globgpos.mouse.y;
             }
             GrBitBlt(NULL, x, y, pawn, 0, 0, pawn->gc_xmax, pawn->gc_ymax, TRANSPARENT);
+        }
+    }
+}
+
+/***********************/
+
+void paint_barreras(void)
+{
+    int c, c2, nf, nf2;
+    int vertical, gnc, gnf, pos;
+    int x, y;
+    GrContext *barrctx;
+
+    for (c=AMAR; c<=VERD; c++) {
+        if (globpt.pp.dp.playertype[c] == NOPLAY) continue;
+        for (c2=AMAR; c2<=VERD; c2++) {
+            if (globpt.pp.dp.playertype[c2] == NOPLAY) continue;
+            if (globpt.pp.dp.gametype == GT_SINGLE) {
+                if (c != c2) continue;
+            } else if (globpt.pp.dp.gametype == GT_PAIRS) {
+                if (c != c2 && c2 != DPTeamColor(c)) continue;
+            } else {
+                continue;
+            }
+            for (nf=0; nf<4; nf++) {
+                if (globgstatus.oncarrera && globcar.jg.cjugador == c &&
+                    globcar.jg.nficha == nf) continue;
+                if (globgstatus.mousingpawn && globpt.pp.turno == c &&
+                    globpt.gjg.jg[globpt.njgselec].nficha == nf) continue;
+                if (globpt.pp.pf[c][nf].ind == 0 &&
+                    (globpt.pp.pf[c][nf].place == CORR || globpt.pp.pf[c][nf].place == LLEG)) {
+                    for (nf2=0; nf2<4; nf2++) {
+                        if (globgstatus.oncarrera && globcar.jg.cjugador == c2 &&
+                            globcar.jg.nficha == nf2) continue;
+                        if (globgstatus.mousingpawn && globpt.pp.turno == c2 &&
+                            globpt.gjg.jg[globpt.njgselec].nficha == nf2) continue;
+                        if (c == c2 && nf == nf2) continue;
+                        if (c != c2 && globpt.pp.pf[c][nf].place == LLEG) continue;
+                        if (globpt.pp.pf[c2][nf2].ind == 1 &&
+                            globpt.pp.pf[c][nf].place == globpt.pp.pf[c2][nf2].place &&
+                            globpt.pp.pf[c][nf].pos == globpt.pp.pf[c2][nf2].pos) {
+                            //tenemos barrera
+                            vertical = 0;
+                            gnc = c;
+                            gnf = nf;
+                            if (globpt.pp.pf[c][nf].place == CORR) {
+                                pos = globpt.pp.pf[c][nf].pos;
+                                if ((pos<8) || (pos>24 && pos<42) || (pos>58)) vertical = 1;
+                                if ((pos<8) || (pos>16 && pos<33) || (pos>41 && pos<50)) {
+                                    gnc = c2;
+                                    gnf = nf2;
+                                }
+                            } else {
+                                if (c == AMAR || c == ROJO) vertical = 1;
+                            }
+                            get_xy_from_posficha(&x, &y, &(globpt.pp.pf[gnc][gnf]), gnc);
+                            barrctx = vertical ? imgbarrerav : imgbarrerah;
+                            GrBitBlt(NULL, x, y, barrctx, 0, 0,
+                                     barrctx->gc_xmax, barrctx->gc_ymax, TRANSPARENT);
+                        }
+                    }
+                }
+            }
         }
     }
 }

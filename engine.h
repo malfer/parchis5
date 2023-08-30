@@ -74,6 +74,7 @@ void DPSetFromString(DefPartida *dp, char *s);
 void DPCountPlayers(DefPartida *dp);
 int DPmatch(DefPartida *dp1, DefPartida *dp2);
 int DPSameTeam(int p1, int p2);
+int DPTeamColor(int c);
 
 // places
 

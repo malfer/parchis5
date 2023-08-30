@@ -40,7 +40,7 @@ static int resolw[5] = {640, 800, 1024, 1150, 4000};
 static int resolh[5] = {480, 600,  768,  950, 4000};
 
 static int nboard, gwidth, gheight, resolind, lang;
-static int maxrsz, testopt;
+static int showbarrs, maxrsz, testopt;
 
 static int asetDlgCreate(void);
 static void asetDlgDestroy(void);
@@ -76,6 +76,8 @@ int process_settgdlg_event(void *udata, GrEvent *ev)
             lang = ev->p2;
         } else if (ev->p1 == 5) {
             nboard = ev->p2;
+        } else if (ev->p1 == 7) {
+            showbarrs = ev->p2;
         }
     }
 
@@ -87,6 +89,7 @@ static int settingsDlgCreate(void)
     static char *listresol[5];
     static char *listboard[3];
     static char *listlang[NUM_LANGUAGES];
+    static char *listshbarr[2];
     int i;
 
     if (settgdlg) return 1; // dialog already created
@@ -103,8 +106,10 @@ static int settingsDlgCreate(void)
     listboard[0] = _(SDST_TBL1);
     listboard[1] = _(SDST_TBL2);
     listboard[2] = _(SDST_TBL3);
+    listshbarr[0] = _(SGN_NO);
+    listshbarr[1] = _(SGN_YES);
 
-    settggo = GUIGroupCreate(9, 0, 0);
+    settggo = GUIGroupCreate(11, 0, 0);
     if (settggo == NULL) return 0;
 
     GUIObjectSetLabel(&(settggo->o[0]),  0,   0,   0, 180, 40, GrNOCOLOR, WEBC_BLACK, _(SDST_GOGDIM));
@@ -113,9 +118,11 @@ static int settingsDlgCreate(void)
     GUIObjectSetList(&(settggo->o[3]),   3, 180,  45, 180, 30, WEBC_WHITE, WEBC_BLACK, (void **)listlang, NUM_LANGUAGES, 10, lang);
     GUIObjectSetLabel(&(settggo->o[4]),  4,   0,  80, 180, 40, GrNOCOLOR, WEBC_BLACK, _(SDST_GOTBL));
     GUIObjectSetList(&(settggo->o[5]),   5, 180,  85, 180, 30, WEBC_WHITE, WEBC_BLACK, (void **)listboard, 3, 3, nboard);
-    GUIObjectSetButton(&(settggo->o[6]), 6,   0, 230, 100, 40, WEBC_TAN, WEBC_BLACK, _(SGN_OK), COMMAND_OK, 0, 0);
-    GUIObjectSetButton(&(settggo->o[7]), 7, 130, 230, 100, 40, WEBC_TAN, WEBC_BLACK, _(SDST_ADV), COMMAND_ADVANCED, 0, 0);
-    GUIObjectSetButton(&(settggo->o[8]), 8, 260, 230, 100, 40, WEBC_TAN, WEBC_BLACK, _(SGN_CANCEL), COMMAND_CANCEL, 0, 0);
+    GUIObjectSetLabel(&(settggo->o[6]),  6,   0, 120, 180, 40, GrNOCOLOR, WEBC_BLACK, _(SDST_GOSHB));
+    GUIObjectSetList(&(settggo->o[7]),   7, 180, 125, 180, 30, WEBC_WHITE, WEBC_BLACK, (void **)listshbarr, 2, 2, showbarrs);
+    GUIObjectSetButton(&(settggo->o[8]), 8,   0, 230, 100, 40, WEBC_TAN, WEBC_BLACK, _(SGN_OK), COMMAND_OK, 0, 0);
+    GUIObjectSetButton(&(settggo->o[9]), 9, 130, 230, 100, 40, WEBC_TAN, WEBC_BLACK, _(SDST_ADV), COMMAND_ADVANCED, 0, 0);
+    GUIObjectSetButton(&(settggo->o[10]),10,260, 230, 100, 40, WEBC_TAN, WEBC_BLACK, _(SGN_CANCEL), COMMAND_CANCEL, 0, 0);
     GUIGroupSetSelected(settggo, 1, 0);
 
     settgdlg = GUIGroupDialogCreate(_(SDST_TITLE),
@@ -149,6 +156,7 @@ int SettingsDlgRun(void)
 
     lang = globcfg.lang;
     nboard = globcfg.nboard;
+    showbarrs = globcfg.showbarrs;
     gwidth = globcfg.gwidth;
     gheight = globcfg.gheight;
     maxrsz = globcfg.maxrsz;
@@ -168,6 +176,7 @@ int SettingsDlgRun(void)
 
     if (result == 1) {
         globcfg.nboard = nboard;
+        globcfg.showbarrs = showbarrs;
         globcfg.gwidth = gwidth;
         globcfg.gheight = gheight;
         globcfg.lang = lang;

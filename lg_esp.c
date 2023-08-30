@@ -108,7 +108,7 @@ static char *sdsv[3] = {
     "Hay una partida guardada,",
     "¿quieres continuarla?"};
 
-static char *sdst[13] = {
+static char *sdst[14] = {
     "\x07\x08 Ajustes globales",
     "Pequeño 640x480",
     "Mediano1 800x600",
@@ -121,6 +121,7 @@ static char *sdst[13] = {
     "Dimensiones gráficas",
     "Idioma",
     "Imagen del tablero",
+    "Mostrar barreras",
     "Avanzado"};
 
 static char *sdast[3] = {
@@ -133,7 +134,7 @@ static char *sdab[6] = {
     "(C)2020,2023 Mariano Alvarez",
     "El parchís es un juego de mesa muy popular en España",
     "Parchís v5.1 es Software Libre,",
-    "utiliza la librería gráfica MRGX y GrGUI",
+    "utiliza la librería gráfica MGRX y GrGUI",
     "lea el fichero readme.txt para mas detalles"};
 
 static char *sdng[12] = {
@@ -190,7 +191,7 @@ void AddEspStrings(int lid)
     GrI18nAddStrings(lid, SMAIN_MENU, 28, (void **)smain);
     GrI18nAddStrings(lid, SDEX_TITLE, 2, (void **)sdex);
     GrI18nAddStrings(lid, SDSV_TITLE, 3, (void **)sdsv);
-    GrI18nAddStrings(lid, SDST_TITLE, 13, (void **)sdst);
+    GrI18nAddStrings(lid, SDST_TITLE, 14, (void **)sdst);
     GrI18nAddStrings(lid, SDAST_TITLE, 3, (void **)sdast);
     GrI18nAddStrings(lid, SDAB_TITLE, 6, (void **)sdab);
     GrI18nAddStrings(lid, SDNG_TITLE, 12, (void **)sdng);
