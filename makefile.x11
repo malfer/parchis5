@@ -4,8 +4,13 @@ CC = gcc
 
 CCOPT = -O1 -Wall
 
+#Choose only one
+#for i386
 #CCOPT += -m32
+#for x86_64
 CCOPT += -m64
+#for ARM
+#CCOPT +=
 
 OBJS = dlgnewgm.o \
        dlgmstat.o \

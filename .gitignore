@@ -4,6 +4,7 @@
 # Ignore executable
 parchis5
 xparchis5
+wparchis5
 # Ignore data files
 parchis.cfg
 parchis.hpt

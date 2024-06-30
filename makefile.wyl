@@ -37,17 +37,21 @@ OBJS = dlgnewgm.o \
        ctxrsz.o   \
        ctxrot.o
 
-all: parchis5
+PKG_CONFIG = pkg-config
+WYLLIBS = $(shell $(PKG_CONFIG) wayland-client --libs)
+WYLLIBS += $(shell $(PKG_CONFIG) xkbcommon --libs)
 
-parchis5: parchis5.o gparchis.h engine.h i18n.h $(OBJS)
-	$(CC) $(CCOPT) $(LDOPT) -o $@ parchis5.o $(OBJS) -lmgrx -ldrm -lpng -lz -lm
+all: wparchis5
+
+wparchis5: parchis5.o gparchis.h engine.h i18n.h $(OBJS)
+	$(CC) $(CCOPT) $(LDOPT) -o $@ parchis5.o $(OBJS) -lmgrxW $(WYLLIBS) -lrt -lpng -lz -lm
 
 parchis5.o: gparchis.h engine.h i18n.h
 
 $(OBJS): %.o : %.c gparchis.h engine.h i18n.h
 
 .c.o:
-	$(CC) -c $(CCOPT) $(INCDIR) $*.c
+	$(CC) -c $(CCOPT) -D__WAYLAND__ $(INCDIR) $*.c
 
 clean:
-	rm -f *.o parchis5
+	rm -f *.o wparchis5
