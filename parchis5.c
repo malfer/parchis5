@@ -1,7 +1,7 @@
 /*
  * parchis5.c --- parchis5 main program
  * 
- * Copyright (c) 2020,2023 Mariano Alvarez Fernandez
+ * Copyright (c) 2020-2024 Mariano Alvarez Fernandez
  * (malfer@telefonica.net)
  *
  * This file is part of Parchís5, a popular spanish game
@@ -392,7 +392,7 @@ void mgrx_setup(int argc, char **argv)
     TRANSPARENT = GrAllocColor(10, 10, 10) | GrIMAGE;
     //TRANSPARENT = GrAllocColor(250, 250, 250) | GrIMAGE;
     //GrSetFontPath("../pfiles/;./");
-    GrSetWindowTitle("Parchis v5.1");
+    GrSetWindowTitle("Parchis v5.2");
 }
 
 /***********************/

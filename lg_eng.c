@@ -1,7 +1,7 @@
 /*
  * lg_eng.c --- English strings
  * 
- * Copyright (c) 2020,2023 Mariano Alvarez Fernandez
+ * Copyright (c) 2020-2024 Mariano Alvarez Fernandez
  * (malfer@telefonica.net)
  *
  * This file is part of Parchís5, a popular spanish game
@@ -36,7 +36,7 @@ static char *sgn[6] = {
     "Off"};
 
 static char *smp[9] = {
-    "    PARCHIS v5.1, MAIN MENU",
+    "    PARCHIS v5.2, MAIN MENU",
     "\x01\x02 &New game",
     "\x03\x04 &Game statistics",
     "\x05\x06 Game spee&d",
@@ -130,10 +130,10 @@ static char *sdast[3] = {
     "Active test options"};
 
 static char *sdab[6] = {
-    "About Parchís v5.1",
-    "(C)2020,2023 Mariano Alvarez",
+    "About Parchís v5.2",
+    "(C)2020-2024 Mariano Alvarez",
     "The parchís is a very popular board game in Spain",
-    "Parchís v5.1 is Free Software,",
+    "Parchís v5.2 is Free Software,",
     "it makes use of the MGRX+GrGUI graphics library",
     "see readme.txt file for details"};
 
@@ -162,7 +162,7 @@ static char *sdgo[6] = {
 static char *sdes[2] = {
     "\x03\x04 Game Statistics",
     "   \x0f\x10   \x11\x12   \x13\x14   \x15\x16   \x17\x18"
-                   "   \x19\x1a    Pass    Eat  Eaten GoHome"};
+    "   \x19\x1a    Pass    Eat  Eaten GoHome"};
 
 static char *sdge[9] = {
     "\x09\x0a Global Statistics",
